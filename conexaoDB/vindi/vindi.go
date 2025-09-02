@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"ostermed/conexaoDB/models"
+	"ostermed/conexaoDB/utils"
 
 	"github.com/joho/godotenv"
 )
@@ -183,8 +184,8 @@ func GetPlansByID(idInt int32) (string, error) {
 	if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("API respondeu com o status:%d ", resp.StatusCode)
 	}
-
 	var result models.SubscriptionResponse
+
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if err != nil {
 		return "", err
@@ -193,9 +194,9 @@ func GetPlansByID(idInt int32) (string, error) {
 		return "", fmt.Errorf("nenhum plano encontrado")
 	}
 
-	planName := result.Subscriptions[0].Plan.Name
+	planName := result.Subscriptions[len(result.Subscriptions)-1].Plan.Name
 
-	return planName, nil
+	return planName, err
 }
 
 func GetInadById(idInt int32) (*bool, error) {
@@ -299,3 +300,15 @@ func GetInadById(idInt int32) (*bool, error) {
 
 	return decode, nil
 }*/
+
+func GetVindiDepsByCpf(cpf string) string {
+	client, err := GetClientByCPF(cpf)
+	if err != nil {
+		return ""
+	}
+	texto := client[0].Notes
+
+	dep1 := utils.SliceSubStringInterval(texto, "&")
+
+	return dep1
+}

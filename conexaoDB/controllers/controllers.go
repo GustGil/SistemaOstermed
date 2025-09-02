@@ -238,23 +238,20 @@ func GetCarteirinhaByCpf(c *gin.Context) {
 	utils.CreateCarteirinha(name, cpf, Plano)
 }
 
-/*func GetClienteBillById(c *gin.Context) {
-	id := c.Param("id")
-	client, err := vindi.GetClienteBillById(id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao encontrar a bill"})
-		fmt.Print(err)
-		return
+/*
+	func GetClienteBillById(c *gin.Context) {
+		id := c.Param("id")
+		client, err := vindi.GetClienteBillById(id)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao encontrar a bill"})
+			fmt.Print(err)
+			return
+		}
+		c.JSON(http.StatusOK, client)
 	}
-	c.JSON(http.StatusOK, client)
-}*/
-
-func GetVindiDepsByCpf(c *gin.Context) {
+*/
+func GetVindiClientDepsByCpf(c *gin.Context) {
 	cpf := c.Param("cpf")
-	result, err := vindi.GetClientByCPF(cpf)
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"error": "cliente nao encontrado"})
-	}
-	client := result[0]
-	inicio := strings.Index("$1")
+	result := vindi.GetVindiDepsByCpf(cpf)
+	c.JSON(http.StatusOK, result)
 }

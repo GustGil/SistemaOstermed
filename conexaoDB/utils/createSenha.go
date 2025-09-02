@@ -8,6 +8,7 @@ import (
 
 	_ "image/jpeg"
 	_ "image/png"
+	"strings"
 
 	"github.com/fogleman/gg"
 
@@ -59,11 +60,24 @@ func CreateCarteirinha(nome string, cpf string, plano string) {
 	dc.DrawString(nome, 50, 800)
 	dc.DrawString(cpf, 50, 950)
 
-	fileName := fmt.Sprintf("Angel Carteirinha - %s.png", nome)
+	fileName := fmt.Sprintf("%s Carteirinha - %s.png", plano, nome)
 
 	err = dc.SavePNG(fileName)
 
 	if err != nil {
 		panic(err)
+	}
+}
+
+func SliceSubStringInterval(text string, Point string) string {
+	inicio := strings.Index(text, Point)
+	fim := strings.LastIndex(text, Point)
+
+	if inicio != -1 && fim != -1 && inicio < fim {
+		resultado := text[inicio+1 : fim]
+		return resultado
+	} else {
+		fmt.Println("Delimitadores não encontrados")
+		return ""
 	}
 }
