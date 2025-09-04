@@ -250,8 +250,8 @@ func GetCarteirinhaByCpf(c *gin.Context) {
 		c.JSON(http.StatusOK, client)
 	}
 */
-func GetVindiClientDepsByCpf(c *gin.Context) {
+/*func GetVindiClientDepsByCpf(c *gin.Context) {
 	cpf := c.Param("cpf")
 	result := vindi.GetVindiDepsByCpf(cpf)
 	c.JSON(http.StatusOK, result)
-}
+}*/

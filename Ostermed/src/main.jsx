@@ -8,6 +8,7 @@ import SejaUmLicenciado from './pages/SejaUmLicenciado.jsx'
 import ListaClientes from './pages/ListaClientes.jsx'
 import UpdateCliente from './pages/UpdateCliente.jsx'
 import Login from './pages/Login.jsx'
+import Carteirinha from './pages/Carteirinha.jsx'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -23,6 +24,8 @@ createRoot(document.getElementById('root')).render(
       <Route path="/UpdateCliente/:id" element={<UpdateCliente />}></Route>
 
       <Route path="/Login" element={<Login />}></Route>
+
+      <Route path='/Carteirinha' element={<Carteirinha />}></Route>
     </Routes>
   </BrowserRouter>
 )

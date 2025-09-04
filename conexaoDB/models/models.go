@@ -120,3 +120,5 @@ type SubscriptionResponse struct {
 		} `json:"customer"`
 	} `json:"subscriptions"`
 }
+
+//type clinica struct {}

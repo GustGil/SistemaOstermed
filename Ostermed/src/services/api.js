@@ -16,3 +16,8 @@ export async function updateUser(id, user){
   const response = await axios.put(`${API_URL}/update/${id}`, user)
   return response.data
 }
+
+export async function getVindiCarteirinha(cpf){
+  const response = await axios.get(`${API_URL}/getCarteirinhaByCpf/${cpf}`)
+  return response.data
+}
