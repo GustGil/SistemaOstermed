@@ -235,7 +235,13 @@ func GetCarteirinhaByCpf(c *gin.Context) {
 		Plano = "Vida Plena"
 	}
 
-	utils.CreateCarteirinha(name, cpf, Plano)
+	imgBytes, err := utils.CreateCarteirinha(name, cpf, Plano)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"Error": "erro ao gerar a carteirinha"})
+	}
+	c.Header("Content-Type", "image/png")
+	c.Status(http.StatusOK)
+	c.Data(http.StatusOK, "image/png", imgBytes)
 }
 
 /*

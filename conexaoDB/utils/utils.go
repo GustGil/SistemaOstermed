@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"bytes"
 	"fmt"
 	"image"
 	"os"
@@ -20,7 +21,7 @@ func GerarHashSenha(senha string) (string, error) {
 	return string(bytes), err
 }
 
-func CreateCarteirinha(nome string, cpf string, plano string) {
+func CreateCarteirinha(nome string, cpf string, plano string) ([]byte, error) {
 	var baseImagePath string
 	var rgb1, rgb2, rgb3 int
 	if plano == "Angel" {
@@ -39,12 +40,12 @@ func CreateCarteirinha(nome string, cpf string, plano string) {
 	file, err := os.Open(baseImagePath)
 
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer file.Close()
 	img, _, err := image.Decode(file)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	largura := img.Bounds().Dx()
@@ -53,20 +54,20 @@ func CreateCarteirinha(nome string, cpf string, plano string) {
 
 	err = dc.LoadFontFace(baseFontPath, 40)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	dc.DrawImage(img, 0, 0)
 	dc.SetRGB255(rgb1, rgb2, rgb3)
 	dc.DrawString(nome, 50, 800)
 	dc.DrawString(cpf, 50, 950)
 
-	fileName := fmt.Sprintf("%s Carteirinha - %s.png", plano, nome)
-
-	err = dc.SavePNG(fileName)
-
+	var buf bytes.Buffer
+	err = dc.EncodePNG(&buf)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
+
+	return buf.Bytes(), nil
 }
 
 func SliceSubStringInterval(text string, Point string) string {
