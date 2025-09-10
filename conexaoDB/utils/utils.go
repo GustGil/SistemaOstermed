@@ -21,19 +21,22 @@ func GerarHashSenha(senha string) (string, error) {
 	return string(bytes), err
 }
 
-func CreateCarteirinha(nome string, cpf string, plano string) ([]byte, error) {
+func CreateCarteirinha(nome string, cpf string, plano string, dependentes []string) ([]byte, error) {
 	var baseImagePath string
 	var rgb1, rgb2, rgb3 int
+	var x float64
 	if plano == "Angel" {
 		baseImagePath, _ = filepath.Abs("utils/AngelCarteirinha.png") //127, 129, 131
 		rgb1 = 127
 		rgb2 = 129
 		rgb3 = 131
+		x = 370
 	} else {
 		baseImagePath, _ = filepath.Abs("utils/PremiumCarteirinha.png") //254,254,253
 		rgb1 = 254
 		rgb2 = 254
 		rgb3 = 253
+		x = 175
 	}
 
 	baseFontPath, _ := filepath.Abs("utils/Roboto-Medium.ttf")
@@ -50,16 +53,21 @@ func CreateCarteirinha(nome string, cpf string, plano string) ([]byte, error) {
 
 	largura := img.Bounds().Dx()
 	altura := img.Bounds().Dy()
-	dc := gg.NewContext(largura, altura) //1573 × 1028 px
+	dc := gg.NewContext(largura, altura) //3146 × 1028 px (cada lado tem 1573 de largura)
 
 	err = dc.LoadFontFace(baseFontPath, 40)
 	if err != nil {
 		return nil, err
 	}
+
 	dc.DrawImage(img, 0, 0)
 	dc.SetRGB255(rgb1, rgb2, rgb3)
-	dc.DrawString(nome, 50, 800)
-	dc.DrawString(cpf, 50, 950)
+	dc.DrawString(nome, 100, 815)
+	dc.DrawString(cpf, 100, 965)
+	for i := 0; i < len(dependentes); i++ {
+		dc.DrawString(dependentes[i], 1815, x)
+		x = x + 181
+	}
 
 	var buf bytes.Buffer
 	err = dc.EncodePNG(&buf)
@@ -75,7 +83,7 @@ func SliceSubStringInterval(text string, Point string) string {
 	fim := strings.LastIndex(text, Point)
 
 	if inicio != -1 && fim != -1 && inicio < fim {
-		resultado := text[inicio+1 : fim]
+		resultado := text[inicio+2 : fim]
 		return resultado
 	} else {
 		fmt.Println("Delimitadores não encontrados")

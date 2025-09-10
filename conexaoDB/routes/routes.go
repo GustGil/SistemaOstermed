@@ -44,5 +44,6 @@ func SetupRoutes() *gin.Engine {
 	r.GET("/getCarteirinhaByCpf/:cpf", controllers.GetCarteirinhaByCpf)
 	//r.GET("/getVindiClientDepsByCpf/:cpf", controllers.GetVindiClientDepsByCpf)
 	//r.GET("/getBillsById/:id", controllers.GetClienteBillById)
+	r.GET("/getDepsByCpf/:cpf", controllers.GetVindiClientDepsByCpf)
 	return r
 }

@@ -8,7 +8,6 @@ import (
 	"ostermed/conexaoDB/utils"
 	"ostermed/conexaoDB/vindi"
 	"strconv"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -208,7 +207,6 @@ func GetCarteirinhaByCpf(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "assinatura nao encontrada"})
 		return
 	}
-	var Plano string
 
 	pontInad, err := vindi.GetInadById(ID)
 	if err != nil {
@@ -223,19 +221,13 @@ func GetCarteirinhaByCpf(c *gin.Context) {
 		return
 	}
 
-	if strings.Contains(strings.ToUpper(customerPlano), strings.ToUpper("ANGEL")) {
-		Plano = "Angel"
-	} else if strings.Contains(strings.ToUpper(customerPlano), strings.ToUpper("GUARDIAN")) {
-		Plano = "Guardian"
-	} else if strings.Contains(strings.ToUpper(customerPlano), strings.ToUpper("PREMIUM")) {
-		Plano = "Premium"
-	} else if strings.Contains(strings.ToUpper(customerPlano), strings.ToUpper("DIAMOND")) {
-		Plano = "Diamond"
-	} else if strings.Contains(strings.ToUpper(customerPlano), strings.ToUpper("VIDA PLENA")) {
-		Plano = "Vida Plena"
+	dependentes, err := vindi.GetVindiDepsByCpf(cpf)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
 	}
 
-	imgBytes, err := utils.CreateCarteirinha(name, cpf, Plano)
+	imgBytes, err := utils.CreateCarteirinha(name, cpf, customerPlano, dependentes)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"Error": "erro ao gerar a carteirinha"})
 	}
@@ -256,8 +248,12 @@ func GetCarteirinhaByCpf(c *gin.Context) {
 		c.JSON(http.StatusOK, client)
 	}
 */
-/*func GetVindiClientDepsByCpf(c *gin.Context) {
+func GetVindiClientDepsByCpf(c *gin.Context) {
 	cpf := c.Param("cpf")
-	result := vindi.GetVindiDepsByCpf(cpf)
+	result, err := vindi.GetVindiDepsByCpf(cpf)
+	if err != nil {
+		fmt.Print(err)
+		return
+	}
 	c.JSON(http.StatusOK, result)
-}*/
+}

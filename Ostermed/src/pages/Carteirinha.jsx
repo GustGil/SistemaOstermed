@@ -1,6 +1,6 @@
 import {useState} from "react"
-import { getVindiCarteirinha } from "../services/api"
-import { HttpStatusCode } from "axios"
+import {InputMask} from "react-input-mask";
+
 
 function Carteirinha() {
     const [cpf, setCpf] = useState()
@@ -23,9 +23,11 @@ const gerarCarteirinha = async (cpf) => {
 
     return(
         <div className="w-[100%] h-[100vh] flex flex-col justify-center items-center bg-gray-200">
-            <div className="w-[40%] h-[70vh] rounded-2xl flex flex-col bg-gray-100 items-center justify-center">
-                <input type="number" value={cpf} onChange={(e) => setCpf(e.target.value)} placeholder="asdsadas" className="w-[250px] h-[50px] rounded-xl  border-[#002E47] border-1 p-2" />
-                <button onClick={(e) => gerarCarteirinha(cpf)}>Baixar</button>
+            <div className="w-[40%] h-[70vh] rounded-2xl flex bg-white items-center justify-center">
+                <div className="w-[250px] h-[30vh] flex flex-col justify-evenly items-center">
+                    <input maxlength="11" mask="999.999.999-99"  type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} placeholder="000.000.000-00" className="w-[250px] h-[50px] rounded-xl  border-[#002E47] border-[1px] p-2 appearance-none" />
+                    <button className="w-[250px] h-[50px] rounded-xl text-white bg-[#002E47] hover:bg-white hover:text-[#002E47] duration-100 border-1 p-2 " onClick={(e) => gerarCarteirinha(cpf)}>Baixar</button>
+                </div>
             </div>
                 
 

@@ -11,6 +11,8 @@ import (
 	"os"
 	"ostermed/conexaoDB/models"
 	"ostermed/conexaoDB/utils"
+	"strconv"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -196,7 +198,21 @@ func GetPlansByID(idInt int32) (string, error) {
 
 	planName := result.Subscriptions[len(result.Subscriptions)-1].Plan.Name
 
-	return planName, err
+	var Plano string
+
+	if strings.Contains(strings.ToUpper(planName), strings.ToUpper("ANGEL")) {
+		Plano = "Angel"
+	} else if strings.Contains(strings.ToUpper(planName), strings.ToUpper("GUARDIAN")) {
+		Plano = "Guardian"
+	} else if strings.Contains(strings.ToUpper(planName), strings.ToUpper("PREMIUM")) {
+		Plano = "Premium"
+	} else if strings.Contains(strings.ToUpper(planName), strings.ToUpper("DIAMOND")) {
+		Plano = "Diamond"
+	} else if strings.Contains(strings.ToUpper(planName), strings.ToUpper("VIDA PLENA")) {
+		Plano = "Vida Plena"
+	}
+
+	return Plano, err
 }
 
 func GetInadById(idInt int32) (*bool, error) {
@@ -301,14 +317,32 @@ func GetInadById(idInt int32) (*bool, error) {
 	return decode, nil
 }*/
 
-func GetVindiDepsByCpf(cpf string) string {
+func GetVindiDepsByCpf(cpf string) ([]string, error) {
 	client, err := GetClientByCPF(cpf)
 	if err != nil {
-		return ""
+		return nil, err
 	}
 	texto := client[0].Notes
+	id := client[0].ID
 
-	dep1 := utils.SliceSubStringInterval(texto, "&")
+	plan, err := GetPlansByID(id)
+	if err != nil {
+		return nil, err
+	}
+	var length int
+	switch plan {
+	case "Angel":
+		length = 3
+	case "Premium":
+		length = 5
+	}
+	dependentes := make([]string, length)
+	var ponteiro string
+	for i := 0; i < length; i++ {
+		ponteiro = "#" + strconv.Itoa(i+1)
+		dep := utils.SliceSubStringInterval(texto, ponteiro)
+		dependentes[i] = dep
+	}
 
-	return dep1
+	return dependentes, nil
 }
