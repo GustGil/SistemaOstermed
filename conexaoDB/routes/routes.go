@@ -34,14 +34,17 @@ func SetupRoutes() *gin.Engine {
 	r.GET("/clientesVindi", controllers.GetVindiClientes)
 
 	r.POST("/cadastro", controllers.CreateUser)
+	r.POST("/createClinica", controllers.CreateClinica)
+
 	r.PUT("/update/:id", controllers.UpdateUser)
 
 	r.GET("/getUsuariosByID/:id", controllers.GetUserByID)
-	r.GET("/getVindiClientByID/:id", controllers.GetVindiClientByID) //35794958
+	r.GET("/getVindiClientByID/:id", controllers.GetVindiClientByID)
 	r.GET("/getVindiClientByCpf/:cpf", controllers.GetVindiClientByCpf)
 	r.GET("/getNameVindiClientByCpf/:cpf", controllers.GetNameVindiClientByCpf)
 	r.GET("/getClientPlanoById/:id", controllers.GetCustomerPlanoById)
 	r.GET("/getCarteirinhaByCpf/:cpf", controllers.GetCarteirinhaByCpf)
+
 	//r.GET("/getVindiClientDepsByCpf/:cpf", controllers.GetVindiClientDepsByCpf)
 	//r.GET("/getBillsById/:id", controllers.GetClienteBillById)
 	r.GET("/getDepsByCpf/:cpf", controllers.GetVindiClientDepsByCpf)

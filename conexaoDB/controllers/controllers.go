@@ -122,6 +122,19 @@ func CreateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "usuario cadastrado com sucesso"})
 }
 
+func CreateClinica(c *gin.Context) {
+	var clinica models.Clinica
+	if err := c.ShouldBindJSON(&clinica); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	if err := database.DB.Create(&clinica).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "erro ao salvar a clinica no db"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "clinica salva com sucesso"})
+}
+
 // PUT
 func UpdateUser(c *gin.Context) {
 	id := c.Param("id")

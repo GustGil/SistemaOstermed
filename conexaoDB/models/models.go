@@ -121,4 +121,16 @@ type SubscriptionResponse struct {
 	} `json:"subscriptions"`
 }
 
-//type clinica struct {}
+type Clinica struct {
+	ID      int32  `json:"id"`
+	Name    string `json:"name"`
+	Servico struct {
+		ID            int32   `json:"id"`
+		NomeMedico    string  `json:"namemedico"`
+		Preco         float32 `json:"preco"`
+		Especialidade string  `json:"especialidade"`
+		Descricao     string  `json:"descricao"`
+	} `json:"servico"`
+	Endereco []Adress `json:"endereco"`
+	Telefone []Phone  `json:"telefone"`
+}
