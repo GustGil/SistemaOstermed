@@ -73,6 +73,7 @@ type Cliente struct {
 }
 
 type Adress struct {
+	ID                int32  `gorm:"primaryKey" json:"id"`
 	Street            string `json:"street"`
 	Number            string `json:"number"`
 	AdditionalDetails string `json:"additional_details"`
@@ -121,16 +122,39 @@ type SubscriptionResponse struct {
 	} `json:"subscriptions"`
 }
 
-type Clinica struct {
-	ID      int32  `json:"id"`
-	Name    string `json:"name"`
-	Servico struct {
-		ID            int32   `json:"id"`
-		NomeMedico    string  `json:"namemedico"`
-		Preco         float32 `json:"preco"`
-		Especialidade string  `json:"especialidade"`
-		Descricao     string  `json:"descricao"`
-	} `json:"servico"`
-	Endereco []Adress `json:"endereco"`
-	Telefone []Phone  `json:"telefone"`
+type Clinicas struct {
+	ID       int32              `json:"id"`
+	Name     string             `json:"name"`
+	Servico  []Servicos         `gorm:"foreignKey:ClinicaID" json:"servico"`
+	Endereco []ClinicaEndereco  `gorm:"foreignKey:ClinicaID" json:"endereco"`
+	Telefone []ClinicaTelefones `gorm:"foreignKey:ClinicaID" json:"telefone"`
+}
+
+type Servicos struct {
+	ID            int32   `gorm:"primaryKey" json:"id"`
+	ClinicaID     int32   `json:"-"`
+	NomeMedico    string  `json:"namemedico"`
+	Preco         float32 `json:"preco"`
+	Especialidade string  `json:"especialidade"`
+	Descricao     string  `json:"descricao"`
+}
+type ClinicaEndereco struct {
+	ID                int32  `gorm:"primaryKey" json:"id"`
+	ClinicaID         string `json:"-"`
+	Street            string `json:"street"`
+	Number            string `json:"number"`
+	AdditionalDetails string `json:"additional_details"`
+	Zipcode           string `json:"zipcode"`
+	Neighborhood      string `json:"neighborhood"`
+	City              string `json:"city"`
+	State             string `json:"state"`
+	Country           string `json:"country"`
+}
+
+type ClinicaTelefones struct {
+	ID         int32  `gorm:"primaryKey" json:"id"`
+	ClinicaID  int32  `json:"-"`
+	Phone_type string `json:"phone_type"`
+	Number     string `json:"number"`
+	Extension  string `json:"extension"`
 }

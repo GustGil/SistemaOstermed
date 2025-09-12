@@ -1,5 +1,6 @@
 import axios from "axios"
 
+
 const API_URL = import.meta.env.VITE_API_URL
 
 export async function getUsers(){
@@ -19,5 +20,10 @@ export async function updateUser(id, user){
 
 export async function getVindiCarteirinha(cpf){
   const response = await axios.get(`${API_URL}/getCarteirinhaByCpf/${cpf}`)
+  return response.data
+}
+
+export async function getClinicas(){
+  const response = await axios.get(`${API_URL}/getClinicas`)
   return response.data
 }

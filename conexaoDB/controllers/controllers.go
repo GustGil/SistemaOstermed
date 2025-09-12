@@ -18,6 +18,23 @@ func GetUsers(c *gin.Context) {
 	database.DB.Find(&users)
 	c.JSON(http.StatusOK, users)
 }
+
+func GetClinica(c *gin.Context) {
+	var clinicas []models.Clinicas
+
+	err := database.DB.
+		Preload("Servico").
+		Preload("Endereco").
+		Preload("Telefone").
+		Find(&clinicas).Error
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao buscar clínicas"})
+		return
+	}
+
+	c.JSON(http.StatusOK, clinicas)
+}
 func GetVindiClientes(c *gin.Context) {
 	data, err := vindi.ListClient()
 	if err != nil {
@@ -123,7 +140,7 @@ func CreateUser(c *gin.Context) {
 }
 
 func CreateClinica(c *gin.Context) {
-	var clinica models.Clinica
+	var clinica models.Clinicas
 	if err := c.ShouldBindJSON(&clinica); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
