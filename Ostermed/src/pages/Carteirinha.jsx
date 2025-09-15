@@ -1,7 +1,5 @@
 import {useState} from "react"
-import {InputMask} from "react-input-mask";
 import Header from "../components/Header.jsx"
-import bgImg from "../assets/escritorio-medico-vazio-com-computador-de-mesa.jpg"
 function Carteirinha() {
     const [cpf, setCpf] = useState()
 
@@ -22,7 +20,7 @@ const gerarCarteirinha = async (cpf) => {
 //09634436900
 
     return(
-        <div className={`w-[100%] h-[100vh] flex flex-col justify-center items-center bg-gray-200 bg-[${bgImg}]`}>
+        <div className="w-[100%] h-[100vh] flex flex-col justify-center items-center bg-gray-200 ">
             <Header></Header>
             <div className="w-[100%] h-[85vh] flex justify-center items-center">
                 <div className="w-[40%] h-[60vh] rounded-2xl flex bg-white justify-center items-center ">
