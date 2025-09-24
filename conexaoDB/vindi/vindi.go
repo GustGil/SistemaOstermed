@@ -271,51 +271,47 @@ func GetInadById(idInt int32) (*bool, error) {
 
 }
 
-/*func GetClienteBillById(id string) ([]byte, error) {
+func GetClienteBillById(id int32) (*models.SubscriptionResponse2, error) {
 	apiKey := os.Getenv("VINDI_API_KEY")
 	if apiKey == "" {
-		return nil, fmt.Errorf("Chave API nao encontrada")
+		return nil, fmt.Errorf("Chave da API nao encontrada")
 	}
 
-	baseURL := "https://app.vindi.com.br/api/v1/bills"
+	ID := fmt.Sprintf("%d", id)
 
+	baseUrl := "https://app.vindi.com.br/api/v1/subscriptions"
 	params := url.Values{}
-	params.Set("query", fmt.Sprintf("customer_id=%s", id))
-	fullURL := baseURL + "?" + params.Encode()
+	params.Set("query", "customer_id="+ID)
+	fullUrl := baseUrl + "?" + params.Encode()
 
-	req, err := http.NewRequest("GET", fullURL, nil)
+	req, err := http.NewRequest("GET", fullUrl, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	encoded := base64.StdEncoding.EncodeToString([]byte(apiKey + ":"))
 	req.Header.Set("Authorization", "Basic "+encoded)
-	req.Header.Set("Content-type", "application/json")
+	req.Header.Set("Accept", "application/json")
 
-	client := http.Client{}
+	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
-
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("API respondeu com o status:%d", resp.StatusCode)
 	}
 
-	bytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	code64 := string(bytes)
-	decode, err := utils.Decode(code64)
-	if err != nil {
-		return nil, err
-	}
+	var subs models.SubscriptionResponse2
 
-	return decode, nil
-}*/
+	err = json.NewDecoder(resp.Body).Decode(&subs)
+	if err != nil {
+		return nil, err
+	}
+	return &subs, nil
+}
 
 func GetVindiDepsByCpf(cpf string) ([]string, error) {
 	client, err := GetClientByCPF(cpf)

@@ -47,6 +47,7 @@ func GetVindiClientes(c *gin.Context) {
 
 	c.Data(http.StatusOK, "autorization/json", data)
 }
+
 func GetVindiClientByID(c *gin.Context) {
 	id := c.Param("id")
 	data, err := vindi.GetClientByID(id)
@@ -59,6 +60,7 @@ func GetVindiClientByID(c *gin.Context) {
 	}
 	c.Data(http.StatusOK, "authorization/json", data)
 }
+
 func GetVindiClientByCpf(c *gin.Context) {
 	cpf := c.Param("cpf")
 	customer, err := vindi.GetClientByCPF(cpf)
@@ -253,11 +255,19 @@ func GetCarteirinhaByCpf(c *gin.Context) {
 
 	dependentes, err := vindi.GetVindiDepsByCpf(cpf)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "erro ao buscar os dependentes"})
 		return
 	}
+	bill, err := vindi.GetClienteBillById(ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "erro ao buscar a fatura"})
+		return
+	}
+	t := bill.Subscription[len(bill.Subscription)-1].CurrentPeriod.EndAt
 
-	imgBytes, err := utils.CreateCarteirinha(name, cpf, customerPlano, dependentes)
+	validade := utils.IsoToString(t)
+
+	imgBytes, err := utils.CreateCarteirinha(name, cpf, customerPlano, dependentes, validade)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"Error": "erro ao gerar a carteirinha"})
 	}
@@ -266,18 +276,6 @@ func GetCarteirinhaByCpf(c *gin.Context) {
 	c.Data(http.StatusOK, "image/png", imgBytes)
 }
 
-/*
-	func GetClienteBillById(c *gin.Context) {
-		id := c.Param("id")
-		client, err := vindi.GetClienteBillById(id)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao encontrar a bill"})
-			fmt.Print(err)
-			return
-		}
-		c.JSON(http.StatusOK, client)
-	}
-*/
 func GetVindiClientDepsByCpf(c *gin.Context) {
 	cpf := c.Param("cpf")
 	result, err := vindi.GetVindiDepsByCpf(cpf)
@@ -287,3 +285,16 @@ func GetVindiClientDepsByCpf(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, result)
 }
+
+/*func GetClientFaturaById(c *gin.Context) {
+	id := c.Param("id")
+	result, err := vindi.GetClienteBillById(id)
+	if err != nil {
+		fmt.Print(err)
+		return
+	}
+
+	//endAt := result.Subscription[i-1].CurrentPeriod.StartAt
+
+	c.JSON(http.StatusOK, result.Subscription[len(result.Subscription)-1])
+}*/

@@ -21,7 +21,7 @@ func GerarHashSenha(senha string) (string, error) {
 	return string(bytes), err
 }
 
-func CreateCarteirinha(nome string, cpf string, plano string, dependentes []string) ([]byte, error) {
+func CreateCarteirinha(nome string, cpf string, plano string, dependentes []string, validade string) ([]byte, error) {
 	var baseImagePath string
 	var rgb1, rgb2, rgb3 int
 	var x float64
@@ -64,6 +64,7 @@ func CreateCarteirinha(nome string, cpf string, plano string, dependentes []stri
 	dc.SetRGB255(rgb1, rgb2, rgb3)
 	dc.DrawString(nome, 100, 815)
 	dc.DrawString(cpf, 100, 965)
+	dc.DrawString(validade, 575, 965)
 	for i := 0; i < len(dependentes); i++ {
 		dc.DrawString(dependentes[i], 1815, x)
 		x = x + 181
@@ -89,4 +90,13 @@ func SliceSubStringInterval(text string, Point string) string {
 		fmt.Println("Delimitadores não encontrados")
 		return ""
 	}
+}
+
+func IsoToString(iso string) string {
+	dia := iso[8:10]
+	mes := iso[5:7]
+	ano := iso[0:4]
+	date := fmt.Sprintf("%s/%s/%s", dia, mes, ano)
+
+	return date // 2025-10-17
 }
