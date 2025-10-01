@@ -98,5 +98,5 @@ func IsoToString(iso string) string {
 	ano := iso[0:4]
 	date := fmt.Sprintf("%s/%s/%s", dia, mes, ano)
 
-	return date // 2025-10-17
+	return date
 }

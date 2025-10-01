@@ -2,6 +2,7 @@ package database
 
 import (
 	"log"
+	"ostermed/conexaoDB/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -19,4 +20,5 @@ func Connect() {
 
 	DB = database
 
+	DB.AutoMigrate(&models.ClinicaTelefones{})
 }

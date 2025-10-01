@@ -122,16 +122,16 @@ type SubscriptionResponse struct {
 	} `json:"subscriptions"`
 }
 
-type Clinicas struct {
-	ID       int32              `json:"id"`
+type Clinica struct {
+	ID       int32              `gorm:"primaryKey;autoIncrement" json:"id"`
 	Name     string             `json:"name"`
 	Servico  []Servicos         `gorm:"foreignKey:ClinicaID" json:"servico"`
-	Endereco []ClinicaEndereco  `gorm:"foreignKey:ClinicaID" json:"endereco"`
+	Endereco ClinicaEndereco    `gorm:"foreignKey:ClinicaID" json:"endereco"`
 	Telefone []ClinicaTelefones `gorm:"foreignKey:ClinicaID" json:"telefone"`
 }
 
 type Servicos struct {
-	ID            int32   `gorm:"primaryKey" json:"id"`
+	ID            int32   `gorm:"primaryKey;autoIncrement" json:"id"`
 	ClinicaID     int32   `json:"-"`
 	NomeMedico    string  `json:"namemedico"`
 	Preco         float32 `json:"preco"`
@@ -139,7 +139,7 @@ type Servicos struct {
 	Descricao     string  `json:"descricao"`
 }
 type ClinicaEndereco struct {
-	ID                int32  `gorm:"primaryKey" json:"id"`
+	ID                int32  `gorm:"primaryKey;autoIncrement" json:"id"`
 	ClinicaID         string `json:"-"`
 	Street            string `json:"street"`
 	Number            string `json:"number"`
@@ -152,215 +152,12 @@ type ClinicaEndereco struct {
 }
 
 type ClinicaTelefones struct {
-	ID         int32  `gorm:"primaryKey" json:"id"`
+	ID         int32  `gorm:"primaryKey;autoIncrement" json:"id"`
 	ClinicaID  int32  `json:"-"`
 	Phone_type string `json:"phone_type"`
 	Number     string `json:"number"`
 	Extension  string `json:"extension"`
 }
-
-/*
-type Bill struct {
-	ID               int              `json:"id"`
-	Code             string           `json:"code"`
-	Amount           string           `json:"amount"`
-	Installments     int              `json:"installments"`
-	Status           string           `json:"status"`
-	SeenAt           string           `json:"seen_at"`
-	BillingAt        string           `json:"billing_at"`
-	DueAt            string           `json:"due_at"`
-	URL              string           `json:"url"`
-	CreatedAt        string           `json:"created_at"`
-	UpdatedAt        string           `json:"updated_at"`
-	BillItems        []BillItem       `json:"bill_items"`
-	Charges          []Charge         `json:"charges"`
-	BillAffiliates   []BillAffiliate  `json:"bill_affiliates"`
-	Customer         Customer         `json:"customer"`
-	Period           Period           `json:"period"`
-	Subscription     Subscription     `json:"subscription"`
-	Metadata         map[string]any   `json:"metadata"`
-	PaymentProfile   PaymentProfile   `json:"payment_profile"`
-	PaymentCondition PaymentCondition `json:"payment_condition"`
-}
-
-type BillItem struct {
-	ID             int           `json:"id"`
-	Amount         string        `json:"amount"`
-	Quantity       int           `json:"quantity"`
-	PricingRangeID int           `json:"pricing_range_id"`
-	Description    string        `json:"description"`
-	PricingSchema  PricingSchema `json:"pricing_schema"`
-	Product        Product       `json:"product"`
-	ProductItem    ProductItem   `json:"product_item"`
-	Discount       Discount      `json:"discount"`
-}
-
-type PricingSchema struct {
-	ID            int32          `json:"id"`
-	ShortFormat   string         `json:"short_format"`
-	Price         string         `json:"price"`
-	MinimumPrice  float64        `json:"minimum_price"`
-	SchemaType    string         `json:"schema_type"`
-	PricingRanges []PricingRange `json:"pricing_ranges"`
-	CreatedAt     string         `json:"created_at"`
-}
-
-type PricingRange struct {
-	ID            string  `json:"id"`
-	StartQuantity int     `json:"start_quantity"`
-	EndQuantity   int     `json:"end_quantity"`
-	Price         float64 `json:"price"`
-	OveragePrice  float64 `json:"overage_price"`
-}
-
-type Product struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-	Code string `json:"code"`
-}
-
-type ProductItem struct {
-	ID      int     `json:"id"`
-	Product Product `json:"product"`
-}
-
-type Discount struct {
-	ID           int     `json:"id"`
-	DiscountType string  `json:"discount_type"`
-	Percentage   float64 `json:"percentage"`
-	Amount       float64 `json:"amount"`
-	Quantity     int     `json:"quantity"`
-	Cycles       int     `json:"cycles"`
-}
-
-type Charge struct {
-	ID              int           `json:"id"`
-	Amount          string        `json:"amount"`
-	Status          string        `json:"status"`
-	DueAt           string        `json:"due_at"`
-	PaidAt          string        `json:"paid_at"`
-	Installments    int           `json:"installments"`
-	AttemptCount    int           `json:"attempt_count"`
-	NextAttempt     int           `json:"next_attempt"`
-	PrintURL        string        `json:"print_url"`
-	CreatedAt       string        `json:"created_at"`
-	UpdatedAt       string        `json:"updated_at"`
-	LastTransaction Transaction   `json:"last_transaction"`
-	PaymentMethod   PaymentMethod `json:"payment_method"`
-}
-
-type Transaction struct {
-	ID                    int            `json:"id"`
-	TransactionType       string         `json:"transaction_type"`
-	Status                string         `json:"status"`
-	Amount                string         `json:"amount"`
-	Installments          int            `json:"installments"`
-	GatewayMessage        string         `json:"gateway_message"`
-	GatewayResponseCode   string         `json:"gateway_response_code"`
-	GatewayAuthorization  string         `json:"gateway_authorization"`
-	GatewayTransactionID  string         `json:"gateway_transaction_id"`
-	GatewayResponseFields map[string]any `json:"gateway_response_fields"`
-	FraudDetectorScore    int            `json:"fraud_detector_score"`
-	FraudDetectorStatus   string         `json:"fraud_detector_status"`
-	FraudDetectorID       string         `json:"fraud_detector_id"`
-	CreatedAt             string         `json:"created_at"`
-	Gateway               Gateway        `json:"gateway"`
-	PaymentProfile        PaymentProfile `json:"payment_profile"`
-}
-
-type Gateway struct {
-	ID        int    `json:"id"`
-	Connector string `json:"connector"`
-}
-
-type PaymentProfile struct {
-	ID                 int            `json:"id"`
-	HolderName         string         `json:"holder_name"`
-	RegistryCode       string         `json:"registry_code"`
-	BankBranch         string         `json:"bank_branch"`
-	BankAccount        string         `json:"bank_account"`
-	CardExpiration     string         `json:"card_expiration"`
-	AllowAsFallback    bool           `json:"allow_as_fallback"`
-	CardNumberFirstSix string         `json:"card_number_first_six"`
-	CardNumberLastFour string         `json:"card_number_last_four"`
-	RenewedCard        RenewedCard    `json:"renewed_card"`
-	CardRenewedAt      string         `json:"card_renewed_at"`
-	Token              string         `json:"token"`
-	CreatedAt          string         `json:"created_at"`
-	PaymentCompany     PaymentCompany `json:"payment_company"`
-}
-
-type RenewedCard struct {
-	CardNumberLastFour string `json:"card_number_last_four"`
-	CardExpiration     string `json:"card_expiration"`
-}
-
-type PaymentCompany struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-	Code string `json:"code"`
-}
-
-type PaymentMethod struct {
-	ID         int    `json:"id"`
-	PublicName string `json:"public_name"`
-	Name       string `json:"name"`
-	Code       string `json:"code"`
-	Type       string `json:"type"`
-}
-
-type BillAffiliate struct {
-	AffiliateID int    `json:"affiliate_id"`
-	Amount      string `json:"amount"`
-	AmountType  string `json:"amount_type"`
-}
-
-type Customer struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
-	Code  string `json:"code"`
-}
-
-type Period struct {
-	ID        int    `json:"id"`
-	BillingAt string `json:"billing_at"`
-	Cycle     int    `json:"cycle"`
-	StartAt   string `json:"start_at"`
-	EndAt     string `json:"end_at"`
-	Duration  int    `json:"duration"`
-}
-
-type Subscription struct {
-	ID       int      `json:"id"`
-	Code     string   `json:"code"`
-	Plan     Plan     `json:"plan"`
-	Customer Customer `json:"customer"`
-}
-
-type Plan struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-	Code string `json:"code"`
-}
-
-type PaymentCondition struct {
-	PenaltyFeeValue           float64                    `json:"penalty_fee_value"`
-	PenaltyFeeType            string                     `json:"penalty_fee_type"`
-	DailyFeeValue             float64                    `json:"daily_fee_value"`
-	DailyFeeType              string                     `json:"daily_fee_type"`
-	AfterDueDays              int                        `json:"after_due_days"`
-	PaymentConditionDiscounts []PaymentConditionDiscount `json:"payment_condition_discounts"`
-}
-
-type PaymentConditionDiscount struct {
-	Value         float64 `json:"value"`
-	ValueType     string  `json:"value_type"`
-	DaysBeforeDue int     `json:"days_before_due"`
-}
-type BillsResponse struct {
-	Bills []Bill `json:"bills"`
-}*/
 
 type Subscription struct {
 	ID                     int                     `json:"id"`

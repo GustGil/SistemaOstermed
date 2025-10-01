@@ -6,7 +6,11 @@ function Carteirinha() {
 
 const gerarCarteirinha = async (cpf) => { 
     const img = await fetch(`http://localhost:8000/getCarteirinhaByCpf/${cpf}`)
-    if (!img.ok) throw new Error('Erro ao buscar imagem');
+    if (!img.ok) {
+        const errMsg = await img.text();
+        console.error("Erro backend:", img.status, errMsg);
+        throw new Error('Erro ao buscar imagem');
+    }
     const blob = await img.blob();
 
     const url = URL.createObjectURL(blob);

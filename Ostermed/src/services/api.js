@@ -27,3 +27,8 @@ export async function getClinicas(){
   const response = await axios.get(`${API_URL}/getClinicas`)
   return response.data
 }
+
+export async function createClinica(clinica){
+  const response = await axios.post(`${API_URL}/createClinica`, clinica)
+  return response.data
+}

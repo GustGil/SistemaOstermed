@@ -1,5 +1,14 @@
 package controllers
 
+/*
+PACKAGE CONTROLLERS
+
+- utilizado em fazer funções de cadastro do POSTGRESS
+- funcionalidades do sistema são desenvolvidas aqui
+
+
+*/
+
 import (
 	"fmt"
 	"net/http"
@@ -13,14 +22,14 @@ import (
 )
 
 // GET
-func GetUsers(c *gin.Context) {
+func GetUsers(c *gin.Context) { // Listar usuarios do Postgress
 	var users []models.Cliente
 	database.DB.Find(&users)
 	c.JSON(http.StatusOK, users)
 }
 
-func GetClinica(c *gin.Context) {
-	var clinicas []models.Clinicas
+func GetClinica(c *gin.Context) { // listar clinica do postgress
+	var clinicas []models.Clinica
 
 	err := database.DB.
 		Preload("Servico").
@@ -142,16 +151,18 @@ func CreateUser(c *gin.Context) {
 }
 
 func CreateClinica(c *gin.Context) {
-	var clinica models.Clinicas
+	var clinica models.Clinica
+
 	if err := c.ShouldBindJSON(&clinica); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+
 	if err := database.DB.Create(&clinica).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "erro ao salvar a clinica no db"})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "clinica salva com sucesso"})
+	c.JSON(201, clinica)
 }
 
 // PUT

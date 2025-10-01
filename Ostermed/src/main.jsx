@@ -9,7 +9,7 @@ import ListaClientes from './pages/ListaClientes.jsx'
 import UpdateCliente from './pages/UpdateCliente.jsx'
 import Login from './pages/Login.jsx'
 import Carteirinha from './pages/Carteirinha.jsx'
-
+import CadastroClinica from './pages/CadastroClinica.jsx'
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <Routes>
@@ -26,6 +26,8 @@ createRoot(document.getElementById('root')).render(
       <Route path="/Login" element={<Login />}></Route>
 
       <Route path='/Carteirinha' element={<Carteirinha />}></Route>
+    
+      <Route path="/CadastroClinica" element={<CadastroClinica />} />
     </Routes>
   </BrowserRouter>
 )
